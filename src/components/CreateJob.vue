@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     async createJob() {
-      let result = await axios.post("http://localhost:5000/api/createJob", {
+      let result = await axios.post(`${process.env.API_URL}/createJob`, {
         jobTitle: this.jobTitle,
         jobDescription: this.jobDescription,
         jobLocation: this.jobLocation,

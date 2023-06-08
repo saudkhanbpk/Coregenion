@@ -33,7 +33,7 @@
                
                 <button v-on:click="authenticate()" class="btn btn-primary btn-large">Register</button>
                 
-                <p>Already have an account? - <router-link to="Login">Login Now</router-link></p> 
+                <p>Already have an account? - <router-link to="/">Login Now</router-link></p> 
             </div>
         </form>
     </div>
@@ -58,7 +58,7 @@ export default {
     async authenticate()
     {
         // console.log("signup", this.username, this.email, this.pass)
-        let result = await axios.post("http://localhost:5000/api/register",{
+        let result = await axios.post(`${process.env.API_URL}/register`,{
             fullName:this.fullName,
             phone: this.phone,
             email: this.email,

@@ -2,7 +2,7 @@
     <div class="login-box">
         <div class="center-align">
         </div>
-        <h4>LOGIN</h4>
+        <h4>ADMIN LOGIN</h4>
         <div class="alert alert-warning" v-if="error != null"><span class="white-text">{{ error.message }}</span></div>
         
         <form class="form-group">
@@ -18,7 +18,7 @@
                 <br/>
                 <button v-on:click="login()" class="btn btn-default btn-large">login</button>
                 <hr/>
-                <p>Don't have an account? - <router-link to="/register">Register Now</router-link></p> 
+                <p>Don't have an account? - <router-link to="/">Register Now</router-link></p> 
             </div>
         </form>
     </div>
@@ -26,7 +26,6 @@
 <script>
 import axios from "axios"
 export default {
-    
   name: 'LoginComp',
   data () {
     return {
@@ -36,39 +35,24 @@ export default {
       loading: false
     }
   },
-  mounted() {
-  console.log("fhjshafhasj", process.env.API_URL)
-},
   methods: {
-    
-    async login() {
-      try {
-        const response = await axios.post(`${process.env.API_URL}/login`, {
-          email: this.email,
-          password: this.password,
-        });
-        console.log(response.data);
-
-        if (response.status === 200) {
-          const userDetails = response.data;
-          localStorage.setItem('userDetails', JSON.stringify(userDetails));
-// location.reload();
-          if (userDetails.user.role === "Admin") {
-            alert("Admin login successful");
-            this.$router.push({ name: "Dashboard" });
+    async login () {
+        let result = await axios.post(`${process.env.API_URL}/login`,{
             
-          } else {
-            alert("User login successful");
-            this.$router.push({ name: "Home" });
-          }
+            email: this.email,
+            password: this.password,
+            
+
+        })
+        console.log(result)
+        if(result.status==200)
+        {
+            alert("User registered successfully")
+            this.$router.push({name: "Home"})
         }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    
-  },
-  
+    }
+
+}
 }
 </script>
 <style scoped>
