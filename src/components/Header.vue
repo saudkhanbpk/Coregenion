@@ -6,7 +6,9 @@
       </div>
 
       <router-link to="/home">Home</router-link>
-      <router-link to="/alljobs">All Jobs</router-link>
+      <!-- <router-link to="/alljobs">All Jobs</router-link> -->
+      <!-- <router-link to="/appliedjob">Applied Jobs</router-link> -->
+      <router-link to="/Jobs">Jobs</router-link>
       <router-link v-if="isAdminRole" to="/users">Users</router-link>
       <router-link v-if="isAdminRole" to="/createjob">CreateJob</router-link>
       <router-link v-if="!isLoggedIn" to="/">Login</router-link>
