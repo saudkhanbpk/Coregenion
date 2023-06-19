@@ -1,9 +1,12 @@
 <template>
     <div class="login-box">
+    
         <div class="center-align">
         </div>
         <h4>LOGIN</h4>
-        <div class="alert alert-warning" v-if="error != null"><span class="white-text">{{ error.message }}</span></div>
+        <div class="alert alert-warning" v-if="error != null">
+      <span style="color: red;" >{{ error }}</span>
+    </div>
         
         <form class="form-group">
             <div class="input-field">
@@ -22,6 +25,7 @@
             </div>
         </form>
     </div>
+  
 </template>
 <script>
 import axios from "axios"
@@ -51,6 +55,7 @@ export default {
 
         if (response.status === 200) {
           const userDetails = response.data;
+          console.log("userDetails", userDetails)
           localStorage.setItem('userDetails', JSON.stringify(userDetails));
 // location.reload();
           if (userDetails.user.role === "Admin") {
@@ -62,9 +67,21 @@ export default {
             this.$router.push({ name: "Home" });
           }
         }
+
+        console.log("hhhhhhh", response)
       } catch (error) {
         console.log(error);
+        if (error.response && error.response.data && error.response.data.msg) {
+          this.error = error.response.data.msg;
+          // alert(error.response.data.msg)
+        } else if (error.response && error.response.data) {
+          this.error = error.response.data;
+          
+        } else {
+          this.error = "An error occurred during login. Please try again.";
+        }
       }
+      
     },
     
   },

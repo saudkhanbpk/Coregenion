@@ -1,11 +1,10 @@
 <template>
   <div>
-    <h2>All jobs</h2>
-    
-    <div class="card" v-for="job in allJobs" :key="job.id">
-      <div class="card-content">
+    <h2>Applied Jobs</h2>
+    <div class="job-list">
+      <div v-for="job in appliedjob" :key="job.id" class="job-item">
         <h3>{{ job.jobTitle }}</h3>
-        <button class="apply-button">Apply</button>
+        <p>Job Status: {{ job.status }}</p>
       </div>
     </div>
   </div>
@@ -15,18 +14,27 @@
 import axios from "axios";
 
 export default {
-  name: "AllJobsComp",
+  name: "AppliedJobComp",
   data() {
     return {
-      allJobs: []
+      appliedjob: [],
     };
   },
   async mounted() {
-    let result = await axios.get(`${process.env.API_URL}/getJobs`);
-    this.allJobs = result.data;
-    console.log(this.allJobs);
-  }
-}
+    try {
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      const userId = userDetails.user._id;
+
+      const response = await axios.post(`${process.env.API_URL}/getJob`, {
+        userId: userId,
+      });
+
+      this.appliedjob = response.data;
+    } catch (error) {
+      console.log("Error fetching applied jobs:", error);
+    }
+  },
+};
 </script>
 
 <style scoped>
@@ -34,29 +42,16 @@ h2 {
   color: blue;
 }
 
-.card {
-  background-color: #f7f7f7;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-.card-content {
+.job-list {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-h3 {
-  margin: 0;
-}
-
-.apply-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
+.job-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 300px;
+  margin: 20px;
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
   <div>
     <h2>All Jobs</h2>
-    
+
     <div class="card" v-for="job in allJobs" :key="job.id">
       <div class="card-content">
         <h3>{{ job.jobTitle }}</h3>
-        <button class="apply-button">Apply</button>
+        <button v-on:click="apply(job._id)" class="apply-button">Apply</button>
       </div>
     </div>
   </div>
@@ -18,13 +18,30 @@ export default {
   name: "AllJobsComp",
   data() {
     return {
-      allJobs: []
+      allJobs: [],
+      userId: ""
     };
   },
   async mounted() {
     let result = await axios.get(`${process.env.API_URL}/getJobs`);
     this.allJobs = result.data;
     console.log(this.allJobs);
+    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+    this.userId = userDetails.user._id;
+  },
+  methods: {
+    async apply(jobId) {
+      let status = "true";
+      console.log("iddddddd", jobId);
+      let result2 = await axios.post(`${process.env.API_URL}/appliedBy`, {
+        jobId,
+        status,
+        userId: this.userId
+      });
+      console.log("result 2:", result2);
+      alert("Apply Done");
+      this.$router.push({ name: "AppliedJob" });
+    }
   }
 }
 </script>

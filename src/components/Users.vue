@@ -1,87 +1,125 @@
 <template>
-<h2>Users Page</h2>
-<table border="1">
-      <thead>
-        <tr>
-          
-          <th>jobTitle</th>
-          
-          <th>status </th>
-          <!-- Add more table headers as needed -->
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="job in allUsers" :key="job.id">
-          <td>{{ job.currentJobTitle }}</td>
-          <td>{{ job.status }}
-          <button v-on:click="sub_btn(job._id)">Suspend</button>
-          <button v-on:click="conf_btn(job._id)">Confirm</button>
-          </td>
-          <!-- <td><button>{{ job.status }}</button></td> -->
-          <!-- Add more table cells for other properties -->
-        </tr>
-      </tbody>
-    </table>
+  <div>
+    <h2>Users Page</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>User Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in allUsers" :key="user.id">
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.status }}</td>
+            <td>
+              <button v-on:click="suspendUser(user._id)" class="action-button suspend-button">Suspend</button>
+              <button v-on:click="confirmUser(user._id)" class="action-button confirm-button">Confirm</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>
+
 <script>
 import axios from "axios";
-export default{
-    name:"AllJobsComp",
-     data() {
+
+export default {
+  name: "AllJobsComp",
+  data() {
     return {
       allUsers: []
     };
   },
   async mounted() {
     let result = await axios.get(`${process.env.API_URL}/getUsers`);
-    console.log(result.data)
+    console.log(result.data);
     this.allUsers = result.data;
-    // console.log(this.allUsers);
   },
+  methods: {
+    async suspendUser(id) {
+      let status = "Suspend";
+      let result = await axios.post(`${process.env.API_URL}/updateUser`, {
+        id,
+        status
+      });
+      console.log("Result:", result);
 
-   
- 
-   methods: {
-    async sub_btn (id) {
-        let status ="Suspend"
-    //   return   console.log(status,_id)
-   let result2= await axios.post(`${process.env.API_URL}/updateUser`,{
-            
-            id,
-            status,
-            
-
-        })
-        console.log("result 2 :",result2)
-         // Update the status in the component data
+      // Update the status in the component data
       const user = this.allUsers.find(user => user._id === id);
       if (user) {
         user.status = status;
       }
     },
-   async conf_btn (id) {
-        let status ="Confirmed"
-    //   return   console.log(status,_id)
-   let result2= await axios.post(`${process.env.API_URL}/updateUser`,{
-            
-            id,
-            status,
-            
+    async confirmUser(id) {
+      let status = "Confirmed";
+      let result = await axios.post(`${process.env.API_URL}/updateUser`, {
+        id,
+        status
+      });
+      console.log("Result:", result);
 
-        })
-        console.log("result 2 :",result2)
-        
       // Update the status in the component data
       const user = this.allUsers.find(user => user._id === id);
       if (user) {
         user.status = status;
       }
     }
-    }
+  }
 }
 </script>
+
 <style scoped>
-h2{
-    color:blue
+h2 {
+  color: blue;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.action-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+}
+
+.suspend-button {
+  background-color: #FF5252;
+}
+
+.confirm-button {
+  background-color: #4CAF50;
+}
+
+@media (max-width: 480px) {
+  th,
+  td {
+    font-size: 14px;
+  }
 }
 </style>

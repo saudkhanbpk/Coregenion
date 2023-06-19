@@ -6,9 +6,9 @@
       </div>
 
       <router-link to="/home">Home</router-link>
-      <!-- <router-link to="/alljobs">All Jobs</router-link> -->
-      <!-- <router-link to="/appliedjob">Applied Jobs</router-link> -->
+      <router-link to="/appliedjob">Applied Jobs</router-link>
       <router-link to="/Jobs">Jobs</router-link>
+      <router-link v-if="isAdminRole" to="/alljobs">All Jobs</router-link>
       <router-link v-if="isAdminRole" to="/users">Users</router-link>
       <router-link v-if="isAdminRole" to="/createjob">CreateJob</router-link>
       <router-link v-if="!isLoggedIn" to="/">Login</router-link>
@@ -34,16 +34,16 @@ export default {
       return userRole === 'Admin';
     },
     isLoggedIn() {
-    
+
       const user = JSON.parse(localStorage.getItem('userDetails'));
       return user !== null;
     },
   },
   methods: {
     logout() {
-     
+
       localStorage.removeItem('userDetails');
-      
+
       this.$router.push('/');
     },
   },
@@ -57,6 +57,7 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .nav a {
   float: left;
   color: white;
@@ -66,10 +67,12 @@ export default {
   text-decoration: none;
   margin-right: 5px;
 }
+
 .nav a:hover {
   background: #ddd;
   color: #333;
 }
+
 h2 {
   color: white;
   padding-right: 20px;
